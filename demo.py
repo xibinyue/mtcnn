@@ -508,7 +508,7 @@ def haveFace(img, facedetector):
 
 def main():
     # imglistfile = "./file.txt"
-    imglistfile = "/home/meteo/xibin.yue/mtcnn/imglist.txt"
+    imglistfile = "/home/meteo/xibin.yue/mtcnn/filelist.txt"
     # imglistfile = "/home/duino/iactive/mtcnn/all.txt"
     # imglistfile = "./imglist.txt"
     # imglistfile = "/home/duino/iactive/mtcnn/file_n.txt"
@@ -555,15 +555,16 @@ def main():
                           (int(boundingboxes[i][3]), int(boundingboxes[i][2])), (0, 255, 0), 1)
 
         img = drawBoxes(img, boundingboxes)
-        cv2.imwrite('test_out.png', img)
+        cv2.imwrite(imgpath + 'test_out.png', img)
+        print 'Save Out Image..'
         # cv2.imshow('img', img)
-        ch = cv2.waitKey(0) & 0xFF
-        if ch == 27:
-            break
+        # ch = cv2.waitKey(0) & 0xFF
+        # if ch == 27:
+        #     break
 
 
-            # if boundingboxes.shape[0] > 0:
-            #    error.append[imgpath]
+        # if boundingboxes.shape[0] > 0:
+        #    error.append[imgpath]
     # print error
     f.close()
 
