@@ -7,6 +7,7 @@ import cv2
 import numpy as np
 from python_wrapper import *
 import os
+from config import config
 
 
 def bbreg(boundingbox, reg):
@@ -473,14 +474,11 @@ def detect_face(img, minsize, PNet, RNet, ONet, threshold, fastresize, factor):
 
 def initFaceDetector():
     minsize = 20
-    caffe_model_path = "/home/meteo/xibin.yue/mtcnn/model"
+    caffe_model_path = config.CAFFE_MODEL_PATH
     threshold = [0.6, 0.7, 0.7]
     factor = 0.709
     caffe.set_mode_cpu()
-    PNet = caffe.Net(caffe_model_path + "/det1.prototxt", caffe_model_path + "/det1.caffemodel", caffe.TEST)
-    RNet = caffe.Net(caffe_model_path + "/det2.prototxt", caffe_model_path + "/det2.caffemodel", caffe.TEST)
-    ONet = caffe.Net(caffe_model_path + "/det3.prototxt", caffe_model_path + "/det3.caffemodel", caffe.TEST)
-    return (minsize, PNet, RNet, ONet, threshold, factor)
+    return (minsize, config.PNet, config.RNet, config.ONet, threshold, factor)
 
 
 def haveFace(img, facedetector):
@@ -507,28 +505,18 @@ def haveFace(img, facedetector):
 
 
 def main():
-    # imglistfile = "./file.txt"
-    imglistfile = "/home/meteo/xibin.yue/mtcnn/filelist.txt"
-    # imglistfile = "/home/duino/iactive/mtcnn/all.txt"
-    # imglistfile = "./imglist.txt"
-    # imglistfile = "/home/duino/iactive/mtcnn/file_n.txt"
-    # imglistfile = "/home/duino/iactive/mtcnn/file.txt"
+    imglistfile = config.IMAGE_LIST_FILE
     minsize = 20
-
-    caffe_model_path = "./model"
-
     threshold = [0.6, 0.7, 0.7]
     factor = 0.709
-
     caffe.set_mode_cpu()
-    PNet = caffe.Net(caffe_model_path + "/det1.prototxt", caffe_model_path + "/det1.caffemodel", caffe.TEST)
-    RNet = caffe.Net(caffe_model_path + "/det2.prototxt", caffe_model_path + "/det2.caffemodel", caffe.TEST)
-    ONet = caffe.Net(caffe_model_path + "/det3.prototxt", caffe_model_path + "/det3.caffemodel", caffe.TEST)
-
-    # error = []
     f = open(imglistfile, 'r')
     for imgpath in f.readlines():
         imgpath = imgpath.split('\n')[0]
+        category_ = imgpath.split('/')[6]
+        img_name = imgpath.split('/')[-1]
+        result_path = os.path.join(config.FACE_IMAGE_PATH, category_)
+        config.touch_dir(result_path)
         print "######\n", imgpath
         img = cv2.imread(imgpath)
         try:
@@ -536,37 +524,15 @@ def main():
             tmp = img_matlab[:, :, 2].copy()
             img_matlab[:, :, 2] = img_matlab[:, :, 0]
             img_matlab[:, :, 0] = tmp
-
-            # check rgb position
-            # tic()
-            boundingboxes, points = detect_face(img_matlab, minsize, PNet, RNet, ONet, threshold, False, factor)
-            # toc()
-
-            ## copy img to positive folder
-            # if boundingboxes.shape[0] > 0 :
-            #    import shutil
-            #    shutil.copy(imgpath, '/home/duino/Videos/3/disdata/positive/'+os.path.split(imgpath)[1] )
-            # else:
-            #    import shutil
-            #    shutil.copy(imgpath, '/home/duino/Videos/3/disdata/negetive/'+os.path.split(imgpath)[1] )
-
-
+            boundingboxes, points = detect_face(img_matlab, minsize, config.PNet, config.RNet, config.ONet, threshold,
+                                                False, factor)
             for i in range(len(boundingboxes)):
                 cv2.rectangle(img, (int(boundingboxes[i][1]), int(boundingboxes[i][0])),
                               (int(boundingboxes[i][3]), int(boundingboxes[i][2])), (0, 255, 0), 1)
 
             img = drawBoxes(img, boundingboxes)
-            cv2.imwrite(imgpath + 'test_out.png', img)
+            cv2.imwrite(os.path.join(result_path, img_name), img)
             print 'Save Out Image..'
-            # cv2.imshow('img', img)
-            # ch = cv2.waitKey(0) & 0xFF
-            # if ch == 27:
-            #     break
-
-
-            # if boundingboxes.shape[0] > 0:
-            #    error.append[imgpath]
-        # print error
         except:
             print 'Next..'
     f.close()
