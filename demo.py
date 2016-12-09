@@ -531,41 +531,44 @@ def main():
         imgpath = imgpath.split('\n')[0]
         print "######\n", imgpath
         img = cv2.imread(imgpath)
-        img_matlab = img.copy()
-        tmp = img_matlab[:, :, 2].copy()
-        img_matlab[:, :, 2] = img_matlab[:, :, 0]
-        img_matlab[:, :, 0] = tmp
+        try:
+            img_matlab = img.copy()
+            tmp = img_matlab[:, :, 2].copy()
+            img_matlab[:, :, 2] = img_matlab[:, :, 0]
+            img_matlab[:, :, 0] = tmp
 
-        # check rgb position
-        # tic()
-        boundingboxes, points = detect_face(img_matlab, minsize, PNet, RNet, ONet, threshold, False, factor)
-        # toc()
+            # check rgb position
+            # tic()
+            boundingboxes, points = detect_face(img_matlab, minsize, PNet, RNet, ONet, threshold, False, factor)
+            # toc()
 
-        ## copy img to positive folder
-        # if boundingboxes.shape[0] > 0 :
-        #    import shutil
-        #    shutil.copy(imgpath, '/home/duino/Videos/3/disdata/positive/'+os.path.split(imgpath)[1] )
-        # else:
-        #    import shutil
-        #    shutil.copy(imgpath, '/home/duino/Videos/3/disdata/negetive/'+os.path.split(imgpath)[1] )
-
-
-        for i in range(len(boundingboxes)):
-            cv2.rectangle(img, (int(boundingboxes[i][1]), int(boundingboxes[i][0])),
-                          (int(boundingboxes[i][3]), int(boundingboxes[i][2])), (0, 255, 0), 1)
-
-        img = drawBoxes(img, boundingboxes)
-        cv2.imwrite(imgpath + 'test_out.png', img)
-        print 'Save Out Image..'
-        # cv2.imshow('img', img)
-        # ch = cv2.waitKey(0) & 0xFF
-        # if ch == 27:
-        #     break
+            ## copy img to positive folder
+            # if boundingboxes.shape[0] > 0 :
+            #    import shutil
+            #    shutil.copy(imgpath, '/home/duino/Videos/3/disdata/positive/'+os.path.split(imgpath)[1] )
+            # else:
+            #    import shutil
+            #    shutil.copy(imgpath, '/home/duino/Videos/3/disdata/negetive/'+os.path.split(imgpath)[1] )
 
 
-        # if boundingboxes.shape[0] > 0:
-        #    error.append[imgpath]
-    # print error
+            for i in range(len(boundingboxes)):
+                cv2.rectangle(img, (int(boundingboxes[i][1]), int(boundingboxes[i][0])),
+                              (int(boundingboxes[i][3]), int(boundingboxes[i][2])), (0, 255, 0), 1)
+
+            img = drawBoxes(img, boundingboxes)
+            cv2.imwrite(imgpath + 'test_out.png', img)
+            print 'Save Out Image..'
+            # cv2.imshow('img', img)
+            # ch = cv2.waitKey(0) & 0xFF
+            # if ch == 27:
+            #     break
+
+
+            # if boundingboxes.shape[0] > 0:
+            #    error.append[imgpath]
+        # print error
+        except:
+            print 'Next..'
     f.close()
 
 
