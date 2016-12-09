@@ -555,7 +555,8 @@ def main():
                           (int(boundingboxes[i][3]), int(boundingboxes[i][2])), (0, 255, 0), 1)
 
         img = drawBoxes(img, boundingboxes)
-        cv2.imshow('img', img)
+        cv2.imwrite('test_out.png', img)
+        # cv2.imshow('img', img)
         ch = cv2.waitKey(0) & 0xFF
         if ch == 27:
             break
