@@ -12,7 +12,7 @@ def imResample(img, hs, ws):
     return im_data
 
 def main():
-    img = cv2.imread('/home/duino/project/mtcnn/test1.jpg');
+    img = cv2.imread('/home/meteo/xibin.yue/mtcnn/test1.jpg')
     img = img.astype(float)
     hs = 207
     ws = 270
