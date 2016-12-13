@@ -214,13 +214,14 @@ def drawBoxes(im, boxes):
     return im
 
 
-def cropBoxes(im, boxes):
+def cropBoxes(im, boxes, save_path):
     x1 = boxes[:, 0]
     y1 = boxes[:, 1]
     x2 = boxes[:, 2]
     y2 = boxes[:, 3]
     for i in range(x1.shape[0]):
         temp = im[x1[i]:x1[i] + x2[i], y1[i]:y1[i] + y2[i]]
+        cv2.imwrite(save_path + str(i), temp)
 
 
 from time import time
@@ -520,7 +521,7 @@ def main():
     factor = 0.709
     caffe.set_mode_cpu()
     f = open(imglistfile, 'r')
-    for imgpath in f.readlines()[:1000]:
+    for imgpath in f.readlines()[:10]:
         imgpath = imgpath.split('\n')[0]
         category_ = imgpath.split('/')[6]
         img_name = imgpath.split('/')[-1]
@@ -535,12 +536,14 @@ def main():
             img_matlab[:, :, 0] = tmp
             boundingboxes, points = detect_face(img_matlab, minsize, config.PNet, config.RNet, config.ONet, threshold,
                                                 False, factor)
-            for i in range(len(boundingboxes)):
-                cv2.rectangle(img, (int(boundingboxes[i][1]), int(boundingboxes[i][0])),
-                              (int(boundingboxes[i][3]), int(boundingboxes[i][2])), (0, 255, 0), 1)
+            # for i in range(len(boundingboxes)):
+            #     cv2.rectangle(img, (int(boundingboxes[i][1]), int(boundingboxes[i][0])),
+            #                   (int(boundingboxes[i][3]), int(boundingboxes[i][2])), (0, 255, 0), 1)
 
-            img = drawBoxes(img, boundingboxes)
-            cv2.imwrite(os.path.join(result_path, img_name), img)
+            # img = drawBoxes(img, boundingboxes)
+            face_save_path = os.path.join(result_path, img_name)
+            cropBoxes(img, boundingboxes, face_save_path)
+            # cv2.imwrite(os.path.join(result_path, img_name), img)
             print 'Save Out Image..'
         except:
             print 'Next..'
