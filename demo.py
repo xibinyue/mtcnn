@@ -221,6 +221,7 @@ def cropBoxes(im, boxes, save_path):
     y2 = boxes[:, 3]
     for i in range(x1.shape[0]):
         temp = im[x1[i]:x1[i] + x2[i], y1[i]:y1[i] + y2[i]]
+        print temp.shape
         cv2.imwrite(save_path + str(i), temp)
 
 
@@ -529,24 +530,24 @@ def main():
         config.touch_dir(result_path)
         print "######\n", imgpath
         img = cv2.imread(imgpath)
-        try:
-            img_matlab = img.copy()
-            tmp = img_matlab[:, :, 2].copy()
-            img_matlab[:, :, 2] = img_matlab[:, :, 0]
-            img_matlab[:, :, 0] = tmp
-            boundingboxes, points = detect_face(img_matlab, minsize, config.PNet, config.RNet, config.ONet, threshold,
-                                                False, factor)
-            # for i in range(len(boundingboxes)):
-            #     cv2.rectangle(img, (int(boundingboxes[i][1]), int(boundingboxes[i][0])),
-            #                   (int(boundingboxes[i][3]), int(boundingboxes[i][2])), (0, 255, 0), 1)
+        # try:
+        img_matlab = img.copy()
+        tmp = img_matlab[:, :, 2].copy()
+        img_matlab[:, :, 2] = img_matlab[:, :, 0]
+        img_matlab[:, :, 0] = tmp
+        boundingboxes, points = detect_face(img_matlab, minsize, config.PNet, config.RNet, config.ONet, threshold,
+                                            False, factor)
+        # for i in range(len(boundingboxes)):
+        #     cv2.rectangle(img, (int(boundingboxes[i][1]), int(boundingboxes[i][0])),
+        #                   (int(boundingboxes[i][3]), int(boundingboxes[i][2])), (0, 255, 0), 1)
 
-            # img = drawBoxes(img, boundingboxes)
-            face_save_path = os.path.join(result_path, img_name)
-            cropBoxes(img, boundingboxes, face_save_path)
-            # cv2.imwrite(os.path.join(result_path, img_name), img)
-            print 'Save Out Image..'
-        except:
-            print 'Next..'
+        # img = drawBoxes(img, boundingboxes)
+        face_save_path = os.path.join(result_path, img_name)
+        cropBoxes(img, boundingboxes, face_save_path)
+        # cv2.imwrite(os.path.join(result_path, img_name), img)
+        print 'Save Out Image..'
+        # except:
+        #     print 'Next..'
     f.close()
 
 
