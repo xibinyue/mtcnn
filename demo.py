@@ -520,7 +520,7 @@ def main():
     factor = 0.709
     caffe.set_mode_cpu()
     f = open(imglistfile, 'r')
-    for imgpath in f.readlines():
+    for imgpath in f.readlines()[:1000]:
         imgpath = imgpath.split('\n')[0]
         category_ = imgpath.split('/')[6]
         img_name = imgpath.split('/')[-1]
