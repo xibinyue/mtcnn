@@ -220,11 +220,10 @@ def cropBoxes(im, boxes, save_path):
     x2 = boxes[:, 2]
     y2 = boxes[:, 3]
     for i in range(x1.shape[0]):
-        temp = im[x1[i]:x1[i] + x2[i], y1[i]:y1[i] + y2[i]]
-        print temp.shape
+        temp = im[x1[i] - 50:x1[i] + x2[i] + 50, y1[i] - 50:y1[i] + y2[i] + 50]
         path_temp = save_path[:-4] + '_' + str(i) + '.png'
         print path_temp
-        # cv2.imwrite(save_path + str(i), temp)
+        cv2.imwrite(path_temp, temp)
 
 
 from time import time
@@ -530,7 +529,7 @@ def main():
         img_name = imgpath.split('/')[-1]
         result_path = os.path.join(config.FACE_IMAGE_PATH, category_)
         config.touch_dir(result_path)
-        print "######\n", imgpath
+        # print "######\n", imgpath
         img = cv2.imread(imgpath)
         # try:
         img_matlab = img.copy()
