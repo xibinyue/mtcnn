@@ -222,7 +222,7 @@ def cropBoxes(im, boxes, save_path):
     for i in range(x1.shape[0]):
         temp = im[x1[i]:x1[i] + x2[i], y1[i]:y1[i] + y2[i]]
         print temp.shape
-        path_temp = save_path + str(i)
+        path_temp = save_path.split('.')[0] + '_' + str(i) + '.png'
         print path_temp
         # cv2.imwrite(save_path + str(i), temp)
 
