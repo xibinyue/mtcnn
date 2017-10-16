@@ -517,16 +517,16 @@ def haveFace(img, facedetector):
 
 
 def main():
-    imglistfile = config.IMAGE_LIST_FILE
+    imglistfile = 'imglist.txt'
     minsize = 20
     threshold = [0.6, 0.7, 0.7]
     factor = 0.709
     caffe.set_mode_cpu()
     f = open(imglistfile, 'r')
-    for imgpath in f.readlines()[:10]:
+    for imgpath in f.readlines():
         imgpath = imgpath.split('\n')[0]
-        category_ = imgpath.split('/')[6]
-        img_name = imgpath.split('/')[-1]
+        category_ = 0
+        img_name = imgpath
         result_path = os.path.join(config.FACE_IMAGE_PATH, category_)
         config.touch_dir(result_path)
         # print "######\n", imgpath
@@ -542,10 +542,10 @@ def main():
         #     cv2.rectangle(img, (int(boundingboxes[i][1]), int(boundingboxes[i][0])),
         #                   (int(boundingboxes[i][3]), int(boundingboxes[i][2])), (0, 255, 0), 1)
 
-        # img = drawBoxes(img, boundingboxes)
-        face_save_path = os.path.join(result_path, img_name)
-        cropBoxes(img, boundingboxes, face_save_path)
-        # cv2.imwrite(os.path.join(result_path, img_name), img)
+        img = drawBoxes(img, boundingboxes)
+        # face_save_path = os.path.join(result_path, img_name)
+        # cropBoxes(img, boundingboxes, face_save_path)
+        cv2.imwrite(os.path.join(result_path, img_name), img)
         print 'Save Out Image..'
         # except:
         #     print 'Next..'
